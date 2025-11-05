@@ -35,10 +35,11 @@ int main() {
   // Create producer threads
   void *producer_args[]= {q, lawn};
   pthread_t *producers = create_thread(n, produce, producer_args);
-  join_thread(n, producers);
-    // Create consume threads
+  // Create consume threads
   void *consume_args[]= {q, lawn};
   pthread_t *consumers = create_thread(n, consume, consume_args);
+  // Wait for all threads to finish
+  join_thread(n, producers);
   join_thread(n, consumers);
 
   // // Creates moles and adds them to the deque
