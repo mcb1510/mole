@@ -1,6 +1,8 @@
-prog=deq
+prog=wam
+
+ccflags=-pthread
+ldflags=-pthread -lX11 -lfltk
+
+ld=g++
 
 include ../GNUmakefile
-
-try: main.o libdeq.so
-	gcc -o $@ $< -L. -ldeq -Wl,-rpath=.
