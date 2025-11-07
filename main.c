@@ -6,20 +6,25 @@
 #include "lawn.h"
 #include "mole.h"
 #include "threads.h"
+#include "mtq.h"
  
 static void *produce(void *a) {
   void **arg = a;
-  Deq q = (Deq)arg[0];
+  //Deq q = (Deq)arg[0];
+  Mtq mtq = (Mtq)arg[0];
   Lawn l = (Lawn)arg[1];
-  deq_tail_put(q, mole_new(l,0,0));
+  //deq_tail_put(q, mole_new(l,0,0));
+  mtq_tail_put(mtq, mole_new(l,0,0));
   free(arg);
   return 0;
 }
 
 static void *consume(void *a) {
   void **arg = a;
-  Deq q = (Deq)arg[0];
-  Mole m = deq_head_get(q);
+  //Deq q = (Deq)arg[0];
+  Mtq mtq = (Mtq)arg[0];
+  //Mole m = deq_head_get(q);
+  Mole m = mtq_head_get(mtq);
   mole_whack(m);
   free(arg);
   return 0;
@@ -30,13 +35,15 @@ int main() {
   srandom(time(0));
   const int n=10;
   Lawn lawn=lawn_new(0,0);
-  Deq q = deq_new(); //creates dequeu
+  //Deq q = deq_new(); //creates dequeu
+  Mtq mtq = mtq_new(4);
 
   // Create producer threads
-  void *producer_args[]= {q, lawn};
+  void *producer_args[]= {mtq, lawn};
   pthread_t *producers = create_thread(n, produce, producer_args);
+  
   // Create consume threads
-  void *consume_args[]= {q, lawn};
+  void *consume_args[]= {mtq, lawn};
   pthread_t *consumers = create_thread(n, consume, consume_args);
   // Wait for all threads to finish
   join_thread(n, producers);
@@ -56,6 +63,7 @@ int main() {
   // }
 
   // We clean up
-  deq_del(q, NULL);
+  //deq_del(q, NULL);
+  mtq_free(mtq);
   lawn_free(lawn);
 }
