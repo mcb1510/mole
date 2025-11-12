@@ -35,7 +35,7 @@ typedef char *Str;
 typedef void (*DeqMapF)(Data d);
 typedef Str  (*DeqStrF)(Data d);
 
-extern void deq_map(Deq q, DeqMapF f); // foreach
+extern void deq_map(Deq q, DeqMapF f); 
 extern void deq_del(Deq q, DeqMapF f); // free
 extern Str  deq_str(Deq q, DeqStrF f); // toString
 
