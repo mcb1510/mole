@@ -1,3 +1,10 @@
+/* 
+ * File: lawnimp.cc
+ * Description: Implementation of lawn interface
+ * Author(s): Jim Buffenbarger
+ * Date: 11/11/2025
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,6 +42,7 @@ static void tsleep(int secs) {
   pthread_cond_destroy(&cv);
 }
 
+// Check if we are running in a text-only environment
 static int text() {
   char* v=getenv("DISPLAY");
   return !(v && *v);
@@ -44,6 +52,7 @@ static int text() {
 #define WR(X,Y,MSG) printf("(%d,%d) %d %s %s\n",X,Y, gettid(), __func__,MSG)
 #define WR0 { WR(0,0,""); return 0; }
 
+// Create a new lawn window
 extern LINKAGE void* lawnimp_new(int lawnsize, int molesize) {
   if (text()) WR0;
   int size=lawnsize*molesize;
@@ -54,12 +63,14 @@ extern LINKAGE void* lawnimp_new(int lawnsize, int molesize) {
   return w;
 }
 
+// Run the lawn simulation
 extern LINKAGE void* lawnimp_run(LawnRep l) {
   if (text()) WR0;
   Fl::run();
   return 0;
 }
 
+// Create a new mole
 extern LINKAGE void* lawnimp_mole(MoleRep m) {
   if (text()) {
     WR(m->x,m->y,"creating");
@@ -82,6 +93,7 @@ extern LINKAGE void* lawnimp_mole(MoleRep m) {
   return b;
 }
 
+// Whack the mole
 extern LINKAGE void lawnimp_whack(MoleRep m) {
   if (text()) {
     WR(m->x,m->y,"whacking");
@@ -110,6 +122,7 @@ extern LINKAGE void lawnimp_whack(MoleRep m) {
   delete b;
 }
 
+// Free the lawn window
 extern LINKAGE void lawnimp_free(void* w) {
   Fl::lock();
   delete (Fl_Window*)w;

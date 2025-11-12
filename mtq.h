@@ -1,3 +1,10 @@
+/* 
+ * File: mtq.h
+ * Description: Header file for multi-threaded queue.
+ * Author(s): Miguel Carrasco Belmar
+ * Date: 11/11/2025
+ */
+
 #ifndef MTQ_H
 #define MTQ_H
 
